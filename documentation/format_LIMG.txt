@@ -1,0 +1,75 @@
+----------------------------------------------------------------
+
+LIMG Specification						Tile-based image format
+Reversing by bullbin					Little-Endian
+
+----------------------------------------------------------------
+
+----------------------------------------------------------------
+Header									Length (revision): 48
+----------------------------------------------------------------
+Field					Type			Comments
+Magic 					char[4]			b'LIMG'
+Length: Header			uint			48
+Offset: UnkParam1		ushort			Absolute offset
+UNK						ushort
+Offset: UnkParam2		ushort			Absolute offset
+UNK						ushort
+Offset: TileLayout		ushort			Absolute offset
+Count : TileLayout		ushort			Total tiles for output
+Offset: TileData		ushort			Absolute offset
+Count : Tile			ushort
+Count : Palette			ushort			Unconfirmed
+Length: Palette			ushort
+ImageWidth				ushort
+UNK						byte[18]		Not needed for decoding
+
+
+----------------------------------------------------------------
+Palette									After header
+----------------------------------------------------------------
+Field						Type
+Color*						ushort[PaletteLength]
+
+Bits in these shorts are masked using the following setup
+			MSB			-->			  LSB
+			0 		00000 	00000 	00000
+			Alpha	Blue	Green	Red
+...so 16bits total, arranged as 1555ABGR
+
+15 bit color is scaled to 24 bit incorrectly in-game, producing
+grey whites; this can be accomplished by left-shifting the
+color values by 3.
+
+
+----------------------------------------------------------------
+Tile Layout								At TileLayout offset
+----------------------------------------------------------------
+Field						Type
+TileIndex					ushort[TileLayoutCount]
+
+This structure is used to reconstruct the final image by storing
+the arrangement of tiles in the output image.
+
+These values can exceed the total tiles inside the file, so
+perform a modulo operation using the tile count. If the tile
+index is the 65535 (max ushort value), a null tile is being
+referenced so blank out the tile during reconstruction.
+
+
+----------------------------------------------------------------
+Tile Data								At TileData offset
+----------------------------------------------------------------
+Field						Type
+PixelData					Palette-dependent
+
+Use the palette length to find the required bits per pixel.
+This can be accomplished by rounding up the value of
+log2(PaletteLength), then aligning the value to the closest
+multiple of 4 (nibble arrangement).
+
+Tiles are 8x8 images, so 64 color indices will need to be
+fetched per tile. Use the newly found bits-per-pixel value
+to fetch these colors. Again, this can exceed the size of
+the palette, so perform a modulo operation against the palette
+length. Pixels are stored in rows.

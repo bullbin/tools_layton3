@@ -1,0 +1,107 @@
+----------------------------------------------------------------
+
+RE Notes for Professor Layton and the Lost Future (LAYTON3)
+
+The game uses an updated version of the LAYTON2 engine,
+which itself is based on the LAYTON1 engine. While the
+filesystem shares similarities to its predecessors,
+a myriad of new formats obfuscates everything inside the
+game.
+
+Ordering-wise, space is spent much more efficiently throughout
+every format. Next to every asset is compressed in a package
+format to improve efficiency, and all reused images are banked
+instead of separated, emphasing space over readability. Event
+text no longer lives in scripts and is instead saved in
+huge blocks.
+
+----------------------------------------------------------------	
+
+----------------------------------------------------------------
+Format Completion
+----------------------------------------------------------------
+CIMG - Finished		Tile-based image format
+CANI - Finished		Atlas-based image format
+LPC2 - Finished		Simple uncompressed archive format
+LBIN - Parseable		Scripting format
+
+
+----------------------------------------------------------------
+Text Operators							LBIN
+----------------------------------------------------------------
+<V00**>			Start corresponding clip from voice bank
+</V>				Lock voice clip to current text
+<W>				Wait (defined amount of time?)
+<W***>			Wait <***> ms
+<T>				Tap
+<A*/*>			Transition animation
+
+
+----------------------------------------------------------------
+Directories	
+----------------------------------------------------------------
+lt3/menu
+Images
+fk_a				Mystery screen - bottom
+nzb_a				Beasly's Puzzle List - bottom
+s_menu_a			Secrets screen
+
+lt3/menu/<language>
+Images
+fk_bs				Mystery screen - top
+nzb_b				Beasly's Puzzle List - top
+sra_00...35			Credits screens?
+v_bus_a			Bus stop screen
+v_gim_a			Clive's machine transport - bottom
+
+Filesystem
+lt3
+|-- ani								Animations folder
+|-- btl								Unknown
+|-- chr								Unknown - Character sprites?
+|-- dcm
+	|-- code.cbin						Unknown
+	|-- scrdb_eu.cdcm						Handwriting recognition database?
+|-- evt								Events folder
+|-- fnt								Fonts folder
+|-- img								Backgrounds folder
+|-- map
+|-- menu
+|-- mini
+|-- mov								Movie folder
+|-- nazo								Puzzlet-specific folder
+|-- plc
+|-- rc
+	|-- dbg
+		|-- <language>
+			|-- lt3_dbg.cpck				Script file similar to other games, containing
+										key markers for plot development
+		|-- lt3_ver.cfg					Leftover build settings, stating build date
+	|-- mode
+	|-- nazo
+		|-- <language>
+			|-- naz_df<n>				Contains hint and parameter scripts for puzzles,
+										with internal IDs finally matching external IDs
+		|-- naz_sc<n>					Puzzle setup scripts, with long chains of events
+	|-- obj
+	|-- <language>
+		|-- lt3_rc.cpck					Contains lots of information on puzzle data at least,
+										with the first obvious mention of the names of puzzles.
+	|-- lt3_map.cpck
+	|-- lt3_plc.cpck
+|-- snd								Contains general SWD/SAD sound files
+|-- str								Streamable audio, including video and event dialogue
+|-- txt
+	|-- <language>						Text for every event in the game
+	
+----------------------------------------------------------------
+Opcodes	
+----------------------------------------------------------------
+b'\xea\x0b'			Puzzle-related, unknown
+b'\xeb\x0b'			Set prompt text
+b'\xec\x0b'			Set complete text
+b'\xed\x0b'			Set failure text
+b'\xee\x0b'			Hint 1
+b'\xef\x0b'			Hint 2
+b'\xf0\x0b'			Hint 3
+b'\xf1\x0b'			S. Hint

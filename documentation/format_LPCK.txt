@@ -1,0 +1,38 @@
+----------------------------------------------------------------
+
+LPC2 Specification						Simple archive format
+Reversing by bullbin					Little-Endian
+
+----------------------------------------------------------------
+
+----------------------------------------------------------------
+Header
+----------------------------------------------------------------
+Field					Type			Comments
+Magic 					char[4]			b'LPC2'
+Count : File			uint			Absolute offset		
+Offset: File			uint			Absolute offset
+Offset: Eofc			uint			Absolute offset
+Offset: FileInfoTable	uint			Absolute offset
+Offset: FileNameBank	uint			Absolute Offset
+Offset: File			uint			Repeat of previous
+Packing					byte[]			
+
+
+----------------------------------------------------------------
+File Data								At FileInfoTableOffset
+----------------------------------------------------------------
+Field						Type
+FileInfo*					uint[3 * FileCount]
+
+FileInfo Structure
+Field					Type			Comments
+Offset: Name			uint			Relative offset
+Offset: Data			uint			Relative offset
+Length: Data			uint
+
+To extract files, add FileOffset and DataOffset per file to
+produce the absolute offset for the file in question. Read
+DataLength amount of bytes. Fetch names in the same way;
+add FileNameBankOffset and NameOffset to produce the absolute
+offset for the null-terminated string in the name bank.

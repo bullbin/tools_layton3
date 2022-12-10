@@ -1,0 +1,10 @@
+
+assets/
+*.pyc
+*.cbin
+*.limg
+*.png
+*.cimg
+*.cani
+*.lbin
+*.cpck
