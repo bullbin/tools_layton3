@@ -21,8 +21,11 @@ PROCESS_AS_PALETTED     = True
 def pilPaletteToRgbTriplets(image):
     paletteData = image.getpalette()
     output = []
-    for rgbTriplet in range(256):
+    for rgbTriplet in range(len(paletteData) // 3):
         output.append((paletteData[rgbTriplet * 3], paletteData[rgbTriplet * 3 + 1], paletteData[rgbTriplet * 3 + 2]))
+    # PIL finally fixed the annoying palette behaviour, but it breaks this script so replicate it
+    while len(output) != 256:
+        output.append(output[-1])
     return output
 
 def countPilPaletteColours(image):
