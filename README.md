@@ -1,5 +1,7 @@
 # Professor Layton and the Lost Future (5294) Reverse-Engineering
 <i>(Professor Layton and the Unwound Future (5200) in America)</i>
+<br><b>This has been replaced by madhatter which has the same capabilities but comes with support for saner image formats and NDS decompression. This remains as a reference, please use that instead!</b>
+
 <br>By default, scripts expect uncompressed assets. There is code available for decompression but it needs to be called.
 
 ### Scripts
